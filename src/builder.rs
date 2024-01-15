@@ -81,14 +81,15 @@ impl PsScriptBuilder {
 
         if self.execution_policy.is_some(){
             match self.execution_policy.unwrap() {
-                ExecutionPolicy::AllSigned => args.push_front("-ExecutionPolicy AllSigned"),
-                ExecutionPolicy::Bypass => args.push_front("-ExecutionPolicy Bypass"),
-                ExecutionPolicy::Default => args.push_front("-ExecutionPolicy Default"),
-                ExecutionPolicy::RemoteSigned => args.push_front("-ExecutionPolicy RemoteSigned"),
-                ExecutionPolicy::Restricted => args.push_front("-ExecutionPolicy Restricted"),
-                ExecutionPolicy::Undefined => args.push_front("-ExecutionPolicy Undefined"),
-                ExecutionPolicy::Unrestricted => args.push_front("-ExecutionPolicy Unrestricted"),
+                ExecutionPolicy::AllSigned => args.push_front("AllSigned"),
+                ExecutionPolicy::Bypass => args.push_front("Bypass"),
+                ExecutionPolicy::Default => args.push_front("Default"),
+                ExecutionPolicy::RemoteSigned => args.push_front("RemoteSigned"),
+                ExecutionPolicy::Restricted => args.push_front("Restricted"),
+                ExecutionPolicy::Undefined => args.push_front("Undefined"),
+                ExecutionPolicy::Unrestricted => args.push_front("Unrestricted"),
             }
+			args.push_front("-ExecutionPolicy");
         }
 
         PsScript {
