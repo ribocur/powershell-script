@@ -80,6 +80,7 @@ mod builder;
 mod error;
 mod output;
 mod target;
+pub use builder::ExecutionPolicy;
 
 // Note: PowerShell Core can be isntalled on windows as well so we can't simply
 // discriminate based on target family.

@@ -10,7 +10,19 @@ pub struct PsScriptBuilder {
     non_interactive: bool,
     hidden: bool,
     print_commands: bool,
+    execution_policy: Option<ExecutionPolicy>,
 }
+
+// Possible powershell ExecutionPolicies
+pub enum ExecutionPolicy {
+    AllSigned,
+    Bypass,
+    Default,
+    RemoteSigned,
+    Restricted,
+    Undefined,
+    Unrestricted,
+    }
 
 impl PsScriptBuilder {
     /// Creates a default builder with no_profile, non_interactive and hidden
@@ -49,6 +61,14 @@ impl PsScriptBuilder {
         self
     }
 
+    // Set execution policy to one of selected ones.
+    // It will allow to select security level of running scripts
+    // (https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies)
+    pub fn execution_policy(mut self, policy: ExecutionPolicy) -> Self {
+        self.execution_policy = Some(policy);
+        self
+    }
+
     pub fn build(self) -> PsScript {
         let mut args = self.args;
         if self.non_interactive {
@@ -57,6 +77,18 @@ impl PsScriptBuilder {
 
         if self.no_profile {
             args.push_front("-NoProfile");
+        }
+
+        if self.execution_policy.is_some(){
+            match self.execution_policy.unwrap() {
+                ExecutionPolicy::AllSigned => args.push_front("-ExecutionPolicy AllSigned"),
+                ExecutionPolicy::Bypass => args.push_front("-ExecutionPolicy Bypass"),
+                ExecutionPolicy::Default => args.push_front("-ExecutionPolicy Default"),
+                ExecutionPolicy::RemoteSigned => args.push_front("-ExecutionPolicy RemoteSigned"),
+                ExecutionPolicy::Restricted => args.push_front("-ExecutionPolicy Restricted"),
+                ExecutionPolicy::Undefined => args.push_front("-ExecutionPolicy Undefined"),
+                ExecutionPolicy::Unrestricted => args.push_front("-ExecutionPolicy Unrestricted"),
+            }
         }
 
         PsScript {
@@ -82,6 +114,7 @@ impl Default for PsScriptBuilder {
             non_interactive: true,
             hidden: true,
             print_commands: false,
+            execution_policy: None,
         }
     }
 }
